@@ -2,7 +2,7 @@
 - impt rule: always keep console open 
 
 ## Part 1
-- npm create react: npm create vite@latest {directoryName} -- --template react
+- npm create vite@latest part1 -- --template react
 
 - after creation of react app:
     1. delete assets (inside src)
@@ -38,4 +38,6 @@ export default Content
 ```jsx
 import Content from './Content';
 ``` 
+
+## Part 2
 
