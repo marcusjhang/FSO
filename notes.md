@@ -40,4 +40,20 @@ import Content from './Content';
 ``` 
 
 ## Part 2
+- To install a JSON server globally on your device
+```javascript
+npm install -g json-server
+```
 
+- To run a JSON server globally on your device
+```javascript
+json-server --port 3001 --watch db.json
+```
+
+- To install and run a JSON server locally 
+1. create a db.json file in root directory
+2. type the following into the terminal to run the JSON server locally
+```javascript
+npx json-server --port 3001 --watch db.json
+```
+3. navigate to http://localhost:3001/notes in browser to see the db
