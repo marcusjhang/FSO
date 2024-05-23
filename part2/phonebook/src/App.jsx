@@ -8,7 +8,7 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [nextId, setNextId] = useState(5);
+  const [nextId, setNextId] = useState("4");
   const [filter, setFilter] = useState('')
 
   useEffect(() => { // fetch data from server
@@ -17,7 +17,8 @@ const App = () => {
         console.log(persons)
         setPersons(persons)
         const maxId = Math.max(...persons.map(person => person.id), 0)
-        setNextId(maxId + 1)
+        const newId = maxId + 1
+        setNextId(String(newId))
       })
       .catch(error => {
         console.error('Error fetching data:', error)
@@ -49,7 +50,8 @@ const App = () => {
     setPersons(persons.concat(nameObject))
     setNewName('')
     setNewNumber('')
-    setNextId(nextId + 1)
+    const newId = Number(nextId) + 1
+    setNextId(String(newId))
   }
 
   const handleNumberChange = (event) => {
@@ -68,6 +70,17 @@ const App = () => {
     person.name.toLowerCase().includes(filter.toLowerCase())
   );
 
+  const handleDelete = (id) => {
+    personService.remove(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id));
+      })
+      .catch(error => {
+        console.error('Error deleting person:', error);
+      });
+  };
+
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -79,7 +92,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
         addPerson={addPerson}
       />
-      <Names persons={filteredPersons} />
+      <Names persons={filteredPersons} handleDelete={handleDelete}/>
     </div>
   )
 }

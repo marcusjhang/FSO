@@ -16,10 +16,16 @@ const update = (id, newObject) => {
   return request.then(response => response.data) // returns the person object that was updated
 }
 
+const remove = (id) => {
+    const request = axios.delete(`${baseUrl}/${id}`)
+    return request.then(response => response.data)
+}
+
 const personService = { 
   getAll: getAll, 
   create: create, 
   update: update,
+  remove: remove
 }
 
 export default personService;
