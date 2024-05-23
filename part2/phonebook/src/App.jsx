@@ -1,19 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Names from './components/Names'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import personService from './services/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nextId, setNextId] = useState(5);
   const [filter, setFilter] = useState('')
+
+  useEffect(() => { // fetch data from server
+    personService.getAll()
+      .then(persons => {
+        console.log(persons)
+        setPersons(persons)
+        const maxId = Math.max(...persons.map(person => person.id), 0)
+        setNextId(maxId + 1)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error)
+      })
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -30,11 +39,13 @@ const App = () => {
       return
     }
     const nameObject = {
+      id: nextId,
       name: newName,
-      number: newNumber,
-      id: nextId
+      number: newNumber
     }
 
+    personService
+      .create(nameObject)
     setPersons(persons.concat(nameObject))
     setNewName('')
     setNewNumber('')

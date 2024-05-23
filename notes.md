@@ -57,3 +57,9 @@ json-server --port 3001 --watch db.json
 npx json-server --port 3001 --watch db.json
 ```
 3. navigate to http://localhost:3001/notes in browser to see the db
+
+- using axios
+1. npm install axios
+2. npm install json-server --save-dev
+3. (add to scripts) "server": "json-server -p3001 --watch db.json"
+4. npm run server
