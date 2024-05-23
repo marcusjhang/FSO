@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
+
 import Names from './components/Names'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import Notification from './components/Notification'
+
 import personService from './services/persons'
 
 const App = () => {
@@ -9,7 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nextId, setNextId] = useState("4");
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState('');
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => { // fetch data from server
     personService.getAll()
@@ -27,31 +31,45 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to the phonebook`)
-      setNewName('')
-      setNewNumber('')
-      return
-    }
-    if (persons.some(person => person.number === newNumber)) {
-      alert(`${newNumber} is already added to the phonebook`)
-      setNewName('')
-      setNewNumber('')
-      return
-    }
-    const nameObject = {
-      id: nextId,
-      name: newName,
-      number: newNumber
-    }
+    const existingPerson = persons.find(person => person.name === newName);
 
-    personService
-      .create(nameObject)
-    setPersons(persons.concat(nameObject))
-    setNewName('')
-    setNewNumber('')
-    const newId = Number(nextId) + 1
-    setNextId(String(newId))
+    if (existingPerson) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
+        personService.update(existingPerson.id, updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson));
+            setNewName('');
+            setNewNumber('');
+            setNotification(`Updated ${returnedPerson.name}'s number`);
+            setTimeout(() => {
+              setNotification(null);
+            }, 3000);
+          })
+          .catch(error => {
+            console.error('Error updating person:', error);
+          });
+      }
+    } else {
+      const nameObject = {
+        id: nextId,
+        name: newName,
+        number: newNumber
+      };
+
+      personService.create(nameObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName('');
+          setNewNumber('');
+          setNotification(`Added ${returnedPerson.name}`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 3000);
+          const newId = Number(nextId) + 1;
+          setNextId(String(newId));
+        });
+    }
   }
 
   const handleNumberChange = (event) => {
@@ -84,6 +102,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notification} />
       <Filter value={filter} onChange={handleFilterChange} />
       <PersonForm 
         newName={newName}
