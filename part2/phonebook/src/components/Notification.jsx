@@ -1,23 +1,23 @@
-const Notification = ({ message }) => {
+const Notification = ({ message, typeOfNotif }) => {
   if (message === null) {
-    return null
+    return null;
   }
 
   const notificationStyle = {
-    color: 'green',
-    background: 'lightgrey',
+    color: "green",
+    background: "lightgrey",
     fontSize: 20,
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
   };
 
-return (
-    <div style={notificationStyle}>
-      {message}
-    </div>
-  )
-}
+  if (typeOfNotif == "error") {
+    notificationStyle.color = "red";
+  }
 
-export default Notification
+  return <div style={notificationStyle}>{message}</div>;
+};
+
+export default Notification;
