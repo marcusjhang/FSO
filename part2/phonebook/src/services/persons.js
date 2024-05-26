@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/persons'
+const baseUrl = '/api/persons' // you can use a relative base URL because any GET request to the address before this relative base URL will be handled by the backend code
 
 const getAll = () => {
   const request = axios.get(baseUrl)

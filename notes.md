@@ -80,3 +80,18 @@ import countryService from './services/countries'
 
 - if want to send POST requests
     (on postman): body -> raw -> set text to JSON 
+
+
+
+- connecting the frontend to the backend
+    1. in frontend, change url to same path as backend server
+    2. in backend repo, npm install cors
+    3. in backend repo, add middleware
+    ```javascript
+    const cors = require('cors')
+
+    app.use(cors())
+    ```
+    4. 
+
+- after connecting backend and deploying (useing fly.io), after any changes just run (fly deploy)

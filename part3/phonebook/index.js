@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const morgan = require('morgan')
+const cors = require('cors')
 
 // Create a custom token to log the request body
 morgan.token("body", (req) => JSON.stringify(req.body)); // it takes the req and returns a stringified version of the body
@@ -10,6 +11,8 @@ const customFormat = ':method :url :status :res[content-length] - :response-time
 
 app.use(morgan(customFormat)); 
 app.use(express.json());
+app.use(cors())
+app.use(express.static('dist')) // now whenever a GET request is made to the server, the server will first check if the request is for a static file. If it is, the file will be returned to the client. If it is not, the request will be passed on to the next middleware.
 
 persons = [
   {
