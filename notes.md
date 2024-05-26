@@ -63,3 +63,20 @@ npx json-server --port 3001 --watch db.json
 2. npm install json-server --save-dev
 3. (add to scripts) "server": "json-server -p3001 --watch db.json"
 4. npm run server
+
+- import statements
+import countryService from './services/countries' 
+
+    - the './' indicates the current directory
+    - '../' indicates moving up one level from your current directory
+
+- setting up a server
+    1. npm init
+    2. create index.js file (put a conosle.log inside)
+    3. npm install express 
+    4. install nodemon (npm install --save-dev nodemon)
+    5. add ("dev": "nodemon index.js",) to scripts
+    5. npm run dev 
+
+- if want to send POST requests
+    (on postman): body -> raw -> set text to JSON 
