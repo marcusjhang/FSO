@@ -95,3 +95,10 @@ import countryService from './services/countries'
     4. 
 
 - after connecting backend and deploying (useing fly.io), after any changes just run (fly deploy)
+
+- to revert to a previous commit
+    1. source control
+    2. commits
+    3. right click desired commit
+    4. "Revert commit"
+    5. settle merge conflict
