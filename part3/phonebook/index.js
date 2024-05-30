@@ -16,11 +16,11 @@ app.use(express.json());
 app.use(cors())
 app.use(express.static('dist')) // now whenever a GET request is made to the server, the server will first check if the request is for a static file. If it is, the file will be returned to the client. If it is not, the request will be passed on to the next middleware.
 
-app.get("/", (request, response) => {
+app.get("/", (request, response, next) => {
   response.send("<h1>Hello World!</h1>");
 });
 
-app.get("/api/persons", (request, response) => { 
+app.get("/api/persons", (request, response, next) => { 
   Person.find({})
     .then(persons => {
       response.json(persons);
@@ -28,7 +28,7 @@ app.get("/api/persons", (request, response) => {
     .catch(error => next(error));
 });
 
-app.get("/info", (request, response) => { 
+app.get("/info", (request, response, next) => { 
   Person.countDocuments({})
     .then(count => {
       response.send(
@@ -38,7 +38,7 @@ app.get("/info", (request, response) => {
     .catch(error => next(error));
 });
 
-app.get("/api/persons/:id", (request, response) => { 
+app.get("/api/persons/:id", (request, response, next) => { 
   Person.findById(request.params.id)
     .then(person => {
       if (person) {
@@ -52,7 +52,7 @@ app.get("/api/persons/:id", (request, response) => {
 
 app.delete("/api/persons/:id", (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-    .then(result => {
+    .then(response => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -70,13 +70,6 @@ app.post("/api/persons", (request, response) => {
   if (!body.number) {
     return response.status(400).json({
       error: "number missing",
-    });
-  }
-
-  const existingPerson = persons.find((person) => person.name === body.name);
-  if (existingPerson) {
-    return response.status(400).json({
-      error: "name must be unique",
     });
   }
 
@@ -109,7 +102,7 @@ app.put("/api/persons/:id", (request, response, next) => {
     .catch(error => next(error));
 });
 
-const unknownEndpoint = (request, response) => {
+const unknownEndpoint = (request, response, next) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
@@ -120,7 +113,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
 
   next(error)
 }
