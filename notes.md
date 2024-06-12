@@ -33,6 +33,25 @@ const Content = (props) => {
 export default Content
 ```
 
+- change App.jsx to this
+```jsx
+import { useState } from 'react'
+
+function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <>
+        hello world
+    </>
+  )
+}
+
+export default App
+```
+
+
+
 - after defining component, rmb to add the following code block to your App.jsx file
 
 ```jsx
