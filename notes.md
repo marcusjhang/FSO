@@ -121,3 +121,9 @@ import countryService from './services/countries'
     3. right click desired commit
     4. "Revert commit"
     5. settle merge conflict
+
+## Part 6
+- dependencies to install
+
+npm install redux
+npm install react-redux
